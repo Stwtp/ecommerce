@@ -1,0 +1,14 @@
+bin/
+obj/
+Dockerfile
+.dockerignore
+.git/
+.gitignore
+.vscode/
+.vs/
+*.user
+*.swp
+node_modules/
+wwwroot/
+out/
+appsettings.Development.json

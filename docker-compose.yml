@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: playground
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+  webapi:
+    container_name: webapi
+    build:
+      context: ./webapi-boilerplate
+      dockerfile: Dockerfile
+      target: build
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./webapi-boilerplate:/src
+    environment:
+      - ASPNETCORE_URLS=http://+:5001
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Database=playground;Username=admin;Password=password123
+    command: dotnet watch run --urls http://+:5001
+    depends_on:
+      - db
+
+  frontend:
+    container_name: frontend
+
+    build:
+      context: ./nextjs-boilerplate
+      dockerfile: Dockerfile
+    volumes:
+      - ./nextjs-boilerplate:/app
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:5001
+    command: npm run dev
+    depends_on:
+      - webapi
+
+volumes:
+  postgres_data:
