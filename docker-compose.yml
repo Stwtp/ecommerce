@@ -35,13 +35,10 @@ services:
     build:
       context: ./nextjs-boilerplate
       dockerfile: Dockerfile
-    volumes:
-      - ./nextjs-boilerplate:/app
     ports:
       - "3000:3000"
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:5001
-    command: npm run dev
     depends_on:
       - webapi
 
